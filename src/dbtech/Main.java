@@ -16,81 +16,25 @@ import java.util.*;
  * @author Wessel
  */
 public class Main {
-    static String filename = "C:\\fuzzymov2.txt";
+    private static Data dataClass;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        dataClass = new Data();
         System.out.println("Hello World");
         
-        ReadData();
+        //read data
+        dataClass.ReadData();
         
-    }
-    
-    public static void ReadData(){
-        BufferedReader br = null;
+        //Something still goes wrong, as shows this:
+        //dataClass.PrintData();
         
-        //Read data
-        try {
-            String sCurrentLine;
- 
-			br = new BufferedReader(new FileReader(filename));
-            String CurrentID = "";
-            List ProbabilityList = new ArrayList();
-			while ((sCurrentLine = br.readLine()) != null) {  
-                sCurrentLine=sCurrentLine.replace("|", "_"); //splitting on | does not work
-                String[] SplittedLine = sCurrentLine.split("_");
- 				//System.out.println(SplittedLine[0]+" - "+SplittedLine[1]);
-                if (CurrentID.equals(SplittedLine[0])) {
-                    //still same histogram
-                    ;
-                } else {
-                    // new histogram
-                    //process previouse
-                    ProcessHistogram(CurrentID, ProbabilityList);
-                    
-                    //Reset
-                    ProbabilityList.clear();
-                    CurrentID = SplittedLine[0];
-                }
-                ProbabilityList.add(Double.parseDouble(SplittedLine[1]));
-			}
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            try {
-				if (br != null)br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-        }
-    }
-    
-    public static void ProcessHistogram(String CurrentID, List ProbabilityList){
-        //ToDo
-        double EPSILON = 0.00001;
-        double prob;
-        double prevVal = -1; //all probabilities are between 0 and 1.
-        int countVal = 0;
-                
-        Collections.sort(ProbabilityList);
+        //compress data
         
-        //Create histogram from list and save to datatype.
-        for (Object o : ProbabilityList) {
-            prob = (double)o;
-            if (Math.abs(prob-prevVal) < EPSILON){
-                //Same number as previouse
-                countVal++;
-            } else {
-                //save previouse value to data
-                
-                
-                //reset stats
-                prevVal = prob;
-                countVal = 1;
-            }
-        }
-        System.out.println(CurrentID+ProbabilityList);
+        //query data on raw and compressed data.
+        
+        System.out.println("Good night");
     }
     
 }
