@@ -33,6 +33,9 @@ public class Main {
         //compress data
         
         //query data on raw and compressed data.
+        System.out.println("Start printing read data");
+        
+        dataClass.PrintData();
         
         System.out.println("Good night");
     }
