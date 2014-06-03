@@ -19,9 +19,11 @@ public class Data {
 
     static String filename = "C:\\fuzzymov2.txt";
     private final List histList;
+    private final List bucketList;
 
     public Data() {
         this.histList = new ArrayList();
+        this.bucketList = new ArrayList();
     }
 
     public void PrintData() {
@@ -126,9 +128,18 @@ public class Data {
         newHist.print();
     }
     
+    //Compress the data using either the B bucket or the T term metric
+    public void compressData(int nrOfBuckets) {
+        int bucketSize = Math.ceil(histList.size/nrOfBuckets);
+        for (int i = 0; i < bucketSize; i++ ){
+            int s = i*bucketSize;
+            int e = (i+1)*bucketSize - 1;
+            
+        }
+    }
+    
     //Put histograms in buckets
-    public void sumSquaredBuckets(int B ){
+    public void sumSquaredBuckets( ){
         
     }
-
 }
