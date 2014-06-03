@@ -31,6 +31,7 @@ public class Main {
         //dataClass.PrintData();
         
         //compress data
+        //dataClass.sumSquaredBuckets(1);
         
         //query data on raw and compressed data.
         System.out.println("Start printing read data");

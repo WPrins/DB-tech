@@ -125,5 +125,10 @@ public class Data {
         
         newHist.print();
     }
+    
+    //Put histograms in buckets
+    public void sumSquaredBuckets(int B ){
+        
+    }
 
 }
