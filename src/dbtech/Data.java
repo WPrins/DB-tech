@@ -193,7 +193,7 @@ public class Data {
         }
         //int minS = 0,minE = 0;
         for (int k =0; k < m; k++){
-            double temp = (Double)hOpt(k,V,min).get(0) + bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
+            double temp = bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
             if (temp < (Double)min.get(0)){
                 min.set(0, temp);
                 min.set(1, k+1);
@@ -205,13 +205,13 @@ public class Data {
     
     //Put histograms in buckets
     public void sumSquaredBuckets( ){
-        //Collections.swap(histList, 1, 3);
+        //Collections.swap(histList, 7, 1);
         List start = new ArrayList();
         start.add(Double.MAX_VALUE);
         start.add(0);
         start.add(0);
         sumSquaredPreCompute();
-        System.out.println(hOpt(10,5, start));
+        System.out.println(hOpt(100,5, start));
     }
     
     public void sumSquaredPreCompute(){
