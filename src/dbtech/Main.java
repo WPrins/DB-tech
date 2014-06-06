@@ -21,6 +21,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        int NROFBUCKETS = 10;
         dataClass = new Data();
         System.out.println("Hello World");
         
@@ -31,6 +33,8 @@ public class Main {
         //dataClass.PrintData();
         
         //compress data
+        //int nrOfBuckets = NROFBUCKETS;
+        //dataClass.compressData(nrOfBuckets);
         //dataClass.sumSquaredBuckets(1);
         
         //query data on raw and compressed data.
@@ -39,6 +43,14 @@ public class Main {
         dataClass.PrintData();
         
         System.out.println("Good night");
+    }
+    
+    public void selectNormal(){
+        
+    }
+    
+    public void selectCompressed(){
+        
     }
     
 }

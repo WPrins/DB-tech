@@ -16,7 +16,7 @@ import java.util.List;
  * @author P.J.H. van Heck
  */
 public class Data {
-
+    
     static String filename = "C:\\fuzzymov2.txt";
     private final List histList;
     private final List bucketList;
@@ -86,6 +86,8 @@ public class Data {
                 ex.printStackTrace();
             }
         }
+        //Data imported
+        
     }
 
     //Add the given histogram to the data.
@@ -130,12 +132,38 @@ public class Data {
     
     //Compress the data using either the B bucket or the T term metric
     public void compressData(int nrOfBuckets) {
-        int bucketSize = Math.ceil(histList.size/nrOfBuckets);
+        int bucketSize = (int) Math.ceil(histList.size()/nrOfBuckets);
+        
+        histList.size();
+        bucketList.size();
+        //precompute Sum-Squared Error values in O(VN) time
+        
+        //compute buckets
         for (int i = 0; i < bucketSize; i++ ){
+            List bucketList = new ArrayList();
             int s = i*bucketSize;
             int e = (i+1)*bucketSize - 1;
             
+            //collect all histograms in range
+            for (int j = s; j < e; i++){
+                bucketList.add(histList.get(j));
+                
+                
+            }
+            // bucketList contains all histograms
+            
+            //find representative data
+            
+            //add representative histogram to bucketList
+            
+            //clear list and start with the next bucket.
+            bucketList.clear();
         }
+    }
+    
+    public double ValErr(Bucket b,int v,int w){
+        
+        return 0;
     }
     
     //Put histograms in buckets
