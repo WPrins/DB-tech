@@ -164,7 +164,9 @@ public class Data {
     }
     
     public double valErr(int v,int w){
+        //calculate the error for this historgram
         double err = (Double)B.get(w) - (Double)B.get(v-1) - (Math.pow(((Double)A.get(w) - (Double)A.get(v-1)),2))/(w-v+1);
+        //take the absolute error to compare between negative and positive errors
         return Math.abs(err);
     }
     
@@ -174,16 +176,17 @@ public class Data {
             return 0.0;
         }
         for (int v = 0; v < w-1; v++){
-            //double err = valErr(v+1, w);
+            //Recurse over bOpt to find the optimal error
             double temp = bOpt(s,e,w,T-1,min) + valErr(s,e);
             min = Math.min(min, temp);
         }
         return min;
     }
     
-    //public List hOpt(int m, int V, double min, int minS, int minE){
+    //Calculates the optimal histogram
     public List hOpt(int m, int V, List min){
-        //double min = Double.MAX_VALUE;
+       
+        //return 0 if recursion has reached its end
         if(m < 1){
             List recurEnd = new ArrayList();
             recurEnd.add(0.0);
@@ -193,7 +196,9 @@ public class Data {
         }
         //int minS = 0,minE = 0;
         for (int k =0; k < m; k++){
+            //Call bOpt to calculate the error
             double temp = bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
+            //If a better representative was found, save it
             if (temp < (Double)min.get(0)){
                 min.set(0, temp);
                 min.set(1, k+1);
@@ -205,12 +210,14 @@ public class Data {
     
     //Put histograms in buckets
     public void sumSquaredBuckets( ){
-        //Collections.swap(histList, 7, 1);
+        //initialize the best value so far
         List start = new ArrayList();
         start.add(Double.MAX_VALUE);
         start.add(0);
         start.add(0);
+        //precompute values
         sumSquaredPreCompute();
+        //Calculate optimal representative for this bucket
         System.out.println(hOpt(100,5, start));
     }
     
