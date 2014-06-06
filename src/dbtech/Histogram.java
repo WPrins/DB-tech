@@ -21,13 +21,20 @@ public class Histogram {
     public Histogram(String ID, List tupleList){
         this.tupleList = tupleList;
         this.ID = ID;
-
     }
     
-    
+      
     public void addTuple(double prob, int frequency){
         Tuple tuple = new Tuple(prob, frequency);
         this.tupleList.add(tuple);
+    }
+    
+    public int size(){
+        return this.tupleList.size();
+    }
+    
+    public Tuple getTuple(int i){
+        return (Tuple) this.tupleList.get(i);
     }
     
     public void print(){

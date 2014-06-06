@@ -20,10 +20,14 @@ public class Data {
     static String filename = "C:\\fuzzymov2.txt";
     private final List histList;
     private final List bucketList;
+    private final List A;
+    private final List B;
 
     public Data() {
         this.histList = new ArrayList();
         this.bucketList = new ArrayList();
+        this.A = new ArrayList();
+        this.B = new ArrayList();
     }
 
     public void PrintData() {
@@ -134,8 +138,6 @@ public class Data {
     public void compressData(int nrOfBuckets) {
         int bucketSize = (int) Math.ceil(histList.size()/nrOfBuckets);
         
-        histList.size();
-        bucketList.size();
         //precompute Sum-Squared Error values in O(VN) time
         
         //compute buckets
@@ -161,13 +163,65 @@ public class Data {
         }
     }
     
-    public double ValErr(Bucket b,int v,int w){
-        
-        return 0;
+    public double valErr(int v,int w){
+        double err = (Double)B.get(w) - (Double)B.get(v-1) - (Math.pow(((Double)A.get(w) - (Double)A.get(v-1)),2))/(w-v+1);
+        return Math.abs(err);
+    }
+    
+    public double bOpt(int s, int e, int w,int T, double min){
+        //double min = Double.MAX_VALUE;
+        if (T < 0){
+            return 0.0;
+        }
+        for (int v = 0; v < w-1; v++){
+            //double err = valErr(v+1, w);
+            double temp = bOpt(s,e,w,T-1,min) + valErr(s,e);
+            min = Math.min(min, temp);
+        }
+        return min;
+    }
+    
+    //public List hOpt(int m, int V, double min, int minS, int minE){
+    public List hOpt(int m, int V, List min){
+        //double min = Double.MAX_VALUE;
+        if(m < 1){
+            List recurEnd = new ArrayList();
+            recurEnd.add(0.0);
+            recurEnd.add(0);
+            recurEnd.add(0);
+            return recurEnd;
+        }
+        //int minS = 0,minE = 0;
+        for (int k =0; k < m; k++){
+            double temp = (Double)hOpt(k,V,min).get(0) + bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
+            if (temp < (Double)min.get(0)){
+                min.set(0, temp);
+                min.set(1, k+1);
+                min.set(2, m);
+            }
+        }
+        return min;
     }
     
     //Put histograms in buckets
     public void sumSquaredBuckets( ){
-        
+        //Collections.swap(histList, 1, 3);
+        List start = new ArrayList();
+        start.add(Double.MAX_VALUE);
+        start.add(0);
+        start.add(0);
+        sumSquaredPreCompute();
+        System.out.println(hOpt(10,5, start));
     }
+    
+    public void sumSquaredPreCompute(){
+        for(int i=0; i<histList.size()-1; i++){
+            Histogram hist = (Histogram) histList.get(i);
+            for(int j=0; j<hist.size()-1; j++){
+                this.A.add(hist.getTuple(j).prob);
+                this.B.add(Math.pow(hist.getTuple(j).prob,2));
+            }
+        }
+    }
+    
 }

@@ -22,7 +22,7 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        int NROFBUCKETS = 10;
+        int nrOfBuckets = 10;
         dataClass = new Data();
         System.out.println("Hello World");
         
@@ -37,10 +37,11 @@ public class Main {
         //dataClass.compressData(nrOfBuckets);
         //dataClass.sumSquaredBuckets(1);
         
+        dataClass.sumSquaredBuckets();
         //query data on raw and compressed data.
         System.out.println("Start printing read data");
         
-        dataClass.PrintData();
+        //dataClass.PrintData();
         
         System.out.println("Good night");
     }
