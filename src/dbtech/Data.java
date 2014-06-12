@@ -218,7 +218,7 @@ public class Data {
         //precompute values
         sumSquaredPreCompute();
         //Calculate optimal representative for this bucket
-        System.out.println(hOpt(100,5, start));
+        System.out.println(hOpt(10,5, start));
     }
     
     public void sumSquaredPreCompute(){
