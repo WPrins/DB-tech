@@ -22,24 +22,20 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        int nrOfBuckets = 10;
+        int nrOfBuckets = 100;
         dataClass = new Data();
         System.out.println("Hello World");
         
         //read data
         dataClass.ReadData();
         
-        //Something still goes wrong, as shows this:
-        //dataClass.PrintData();
-        
         //compress data
-        //int nrOfBuckets = NROFBUCKETS;
-        //dataClass.compressData(nrOfBuckets);
         //dataClass.sumSquaredBuckets(1);
         
-        dataClass.sumSquaredBuckets();
+        dataClass.compressIntoNBuckets(nrOfBuckets);
+
         //query data on raw and compressed data.
-        System.out.println("Start printing read data");
+
         
         //dataClass.PrintData();
         
