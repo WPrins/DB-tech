@@ -40,14 +40,5 @@ public class Main {
         //dataClass.PrintData();
         
         System.out.println("Good night");
-    }
-    
-    public void selectNormal(){
-        
-    }
-    
-    public void selectCompressed(){
-        
-    }
-    
+    }    
 }

@@ -40,7 +40,52 @@ public class Data {
         }
     }
 
-    public void ReadData() {
+    
+    //-----------------------------------------------------------------------//
+    //Reading data from file                                                 //
+    //-----------------------------------------------------------------------//
+    
+    //Add the given histogram to the data.
+    public void addHistogram(String ID, List ProbabilityList) {
+        double EPSILON = 0.00001;
+        double prob; //a probability
+        double prevVal = -1; //all probabilities are between 0 and 1.
+        int countVal = 0;
+        List tupleList = new ArrayList();
+        Histogram newHist = new Histogram(ID,tupleList);
+
+        //sort the probabilities
+        Collections.sort(ProbabilityList);
+
+        //System.out.println(CurrentID+ProbabilityList);
+        //Create histogram from list and save to datatype.
+        for (Object o : ProbabilityList) {
+            prob = (double) o;
+
+            if (Math.abs(prob - prevVal) < EPSILON) {
+                //if the previouse was the same number, combine.
+                countVal++;
+            } else {
+                //save previouse probability plus frequency to data
+                if (prevVal != -1) { //exclude the initial value
+                    newHist.addTuple(prevVal, countVal);
+                }
+
+                //reset stats
+                prevVal = prob;
+                countVal = 1;
+            }
+        }
+        //Add the last value
+        newHist.addTuple(prevVal, countVal);
+        //Histogram addHist = new Histogram(newHist);
+        //histogram is created, add to the rest.
+        this.histList.add(newHist);
+        
+        newHist.print();
+    }
+    
+        public void ReadData() {
         BufferedReader br = null;
 
         //Read data from file
@@ -93,75 +138,10 @@ public class Data {
         //Data imported
         
     }
-
-    //Add the given histogram to the data.
-    public void addHistogram(String ID, List ProbabilityList) {
-        double EPSILON = 0.00001;
-        double prob; //a probability
-        double prevVal = -1; //all probabilities are between 0 and 1.
-        int countVal = 0;
-        List tupleList = new ArrayList();
-        Histogram newHist = new Histogram(ID,tupleList);
-
-        //sort the probabilities
-        Collections.sort(ProbabilityList);
-
-        //System.out.println(CurrentID+ProbabilityList);
-        //Create histogram from list and save to datatype.
-        for (Object o : ProbabilityList) {
-            prob = (double) o;
-
-            if (Math.abs(prob - prevVal) < EPSILON) {
-                //if the previouse was the same number, combine.
-                countVal++;
-            } else {
-                //save previouse probability plus frequency to data
-                if (prevVal != -1) { //exclude the initial value
-                    newHist.addTuple(prevVal, countVal);
-                }
-
-                //reset stats
-                prevVal = prob;
-                countVal = 1;
-            }
-        }
-        //Add the last value
-        newHist.addTuple(prevVal, countVal);
-        //Histogram addHist = new Histogram(newHist);
-        //histogram is created, add to the rest.
-        this.histList.add(newHist);
         
-        newHist.print();
-    }
-    
-    //Compress the data using either the B bucket or the T term metric
-    public void compressData(int nrOfBuckets) {
-        int bucketSize = (int) Math.ceil(histList.size()/nrOfBuckets);
-        
-        //precompute Sum-Squared Error values in O(VN) time
-        
-        //compute buckets
-        for (int i = 0; i < bucketSize; i++ ){
-            List bucketList = new ArrayList();
-            int s = i*bucketSize;
-            int e = (i+1)*bucketSize - 1;
-            
-            //collect all histograms in range
-            for (int j = s; j < e; i++){
-                bucketList.add(histList.get(j));
-                
-                
-            }
-            // bucketList contains all histograms
-            
-            //find representative data
-            
-            //add representative histogram to bucketList
-            
-            //clear list and start with the next bucket.
-            bucketList.clear();
-        }
-    }
+    //-----------------------------------------------------------------------//
+    //Compressing data into buckets                                          //
+    //-----------------------------------------------------------------------//
     
     public double valErr(int v,int w){
         //calculate the error for this historgram
@@ -184,7 +164,10 @@ public class Data {
     }
     
     //Calculates the optimal histogram
-    public List hOpt(int m, int V, List min){
+    //m = bucketSize
+    //bucketNr
+    //V = dimention of histogram
+    public List hOpt(int m, int bucketNr, int V, List min){
        
         //return 0 if recursion has reached its end
         if(m < 1){
@@ -195,7 +178,7 @@ public class Data {
             return recurEnd;
         }
         //int minS = 0,minE = 0;
-        for (int k =0; k < m; k++){
+        for (int k = (bucketNr*m); k < ((bucketNr+1)*(m)); k++){
             //Call bOpt to calculate the error
             double temp = bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
             //If a better representative was found, save it
@@ -208,17 +191,29 @@ public class Data {
         return min;
     }
     
-    //Put histograms in buckets
-    public void sumSquaredBuckets( ){
-        //initialize the best value so far
-        List start = new ArrayList();
-        start.add(Double.MAX_VALUE);
-        start.add(0);
-        start.add(0);
+    // compress all the data into buckets
+    public void compressIntoNBuckets(int nrOfBuckets){
+        System.out.println("Start creating buckets");
         //precompute values
         sumSquaredPreCompute();
-        //Calculate optimal representative for this bucket
-        System.out.println(hOpt(100,5, start));
+        
+        int bucketSize = (int)Math.ceil(histList.size()/nrOfBuckets);
+        
+        //for each bucket, compute the representative
+        for (int currentBucketNr = 0; currentBucketNr < nrOfBuckets; currentBucketNr++){
+            List bucket = new ArrayList();
+            //initialize bucket, error = max, others are representative
+            bucket.add(Double.MAX_VALUE);
+            bucket.add(0);
+            bucket.add(0);
+            
+            //Calculate optimal representative for this bucket
+            bucket = hOpt(bucketSize, currentBucketNr, 5, bucket);
+            bucketList.add(bucket);
+            System.out.println(currentBucketNr+" buckets created. "+bucket);
+        }
+        System.out.println("All buckets created");
+                
     }
     
     public void sumSquaredPreCompute(){
@@ -231,4 +226,16 @@ public class Data {
         }
     }
     
+    
+    //-----------------------------------------------------------------------//
+    //Query buckets                                                          //
+    //-----------------------------------------------------------------------//
+    
+    public void normalSelect(){
+        
+    }
+    
+    public void bucketSelect(){
+        
+    }
 }
