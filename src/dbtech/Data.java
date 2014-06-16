@@ -5,7 +5,10 @@
 package dbtech;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,6 +142,34 @@ public class Data {
         
     }
         
+    //
+    //Writing data to file
+    //
+        
+        public void writeToFile() {
+        BufferedWriter writer = null;
+        try {
+            //create a temporary file
+            File logFile = new File("C:\\Users\\Public\\Documents\\out.txt");
+
+            writer = new BufferedWriter(new FileWriter(logFile));
+            for (int i = 0; i < this.bucketList.size(); i++){
+                String bucket = this.bucketList.get(i).toString();
+                writer.write(bucket);
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Close the writer regardless of what happens...
+                writer.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+    
     //-----------------------------------------------------------------------//
     //Compressing data into buckets                                          //
     //-----------------------------------------------------------------------//
@@ -179,8 +210,9 @@ public class Data {
         }
         //int minS = 0,minE = 0;
         for (int k = (bucketNr*m); k < ((bucketNr+1)*(m)); k++){
+            double temp = 0;
             //Call bOpt to calculate the error
-            double temp = bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
+            temp += bOpt(k+1,m,V+1,V,Double.MAX_VALUE);
             //If a better representative was found, save it
             if (temp < (Double)min.get(0)){
                 min.set(0, temp);
@@ -211,15 +243,18 @@ public class Data {
             bucket = hOpt(bucketSize, currentBucketNr, 5, bucket);
             bucketList.add(bucket);
             System.out.println(currentBucketNr+" buckets created. "+bucket);
+            
+            
         }
         System.out.println("All buckets created");
+        writeToFile();
                 
     }
     
     public void sumSquaredPreCompute(){
-        for(int i=0; i<histList.size()-1; i++){
+        for(int i=0; i<histList.size(); i++){
             Histogram hist = (Histogram) histList.get(i);
-            for(int j=0; j<hist.size()-1; j++){
+            for(int j=0; j<hist.size(); j++){
                 this.A.add(hist.getTuple(j).prob);
                 this.B.add(Math.pow(hist.getTuple(j).prob,2));
             }
