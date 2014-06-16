@@ -22,7 +22,7 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        int nrOfBuckets = 100;
+        int nrOfBuckets = 150;
         dataClass = new Data();
         System.out.println("Hello World");
         
@@ -38,6 +38,9 @@ public class Main {
 
         
         //dataClass.PrintData();
+        System.out.println("Write to file");
+        dataClass.writeToFile();
+        System.out.println("Writing done");
         
         System.out.println("Good night");
     }    
