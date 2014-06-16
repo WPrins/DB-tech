@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class Data {
     
-    static String filename = "C:\\data_generation_total.txt";
+    static String filename = "C:\\fuzzymov2.txt";
     private final List histList;
     private final List bucketList;
     private final List A;
@@ -82,8 +82,8 @@ public class Data {
         //histogram is created, add to the rest.
         this.histList.add(newHist);
         
+        //Calculate the single representative and the sum of squared error to that
         newHist.calculateAverage();
-        newHist.print();
     }
     
     public void ReadData() {

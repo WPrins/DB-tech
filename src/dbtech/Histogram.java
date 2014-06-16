@@ -57,6 +57,7 @@ public class Histogram {
         
         //Save globaly
         this.sumErrorToSingleRepresentative = sse;
+        System.out.println(sse);
     }
     
     public int size(){
@@ -71,7 +72,7 @@ public class Histogram {
         //System.out.print(ID+" - ");
         for (Object o : this.tupleList) {
             Tuple t = (Tuple)o;
-            //System.out.print("("+t.frequency+" - "+t.prob+"),");
+            System.out.print("("+t.frequency+" - "+t.prob+"),");
         }
         //System.out.println();
     }
