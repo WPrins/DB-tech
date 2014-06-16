@@ -16,6 +16,9 @@ public class Histogram {
     //Histogram concists of probability/frequency tuples
     private List tupleList;
     private String ID;
+    private double singleRepresentative;
+    private double sumErrorToSingleRepresentative;
+    private double averageError;
     
     //initialize
     public Histogram(String ID, List tupleList){
@@ -27,6 +30,33 @@ public class Histogram {
     public void addTuple(double prob, int frequency){
         Tuple tuple = new Tuple(prob, frequency);
         this.tupleList.add(tuple);
+    }
+    
+    //Calculate the single representative and the sum of squared error to that
+    public void calculateAverage(){
+                
+        //Find the single representative, the prob with highest frequency.
+        int highestFreq = 0;
+        for (Object o : this.tupleList) {
+            Tuple tuple = (Tuple)o;
+            
+            //If frequency is higher, update fields
+            if (tuple.frequency > highestFreq){
+                highestFreq = tuple.frequency;
+                this.singleRepresentative = tuple.prob;
+            }   
+        }
+        
+        //Calculate Sum of Squared Error
+        double sse = 0;
+        for (Object o : this.tupleList){
+            Tuple tuple = (Tuple)o;
+            
+            sse += ( (tuple.prob-this.singleRepresentative) * (tuple.prob-this.singleRepresentative) );
+        }
+        
+        //Save globaly
+        this.sumErrorToSingleRepresentative = sse;
     }
     
     public int size(){
