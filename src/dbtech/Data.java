@@ -85,10 +85,11 @@ public class Data {
         //histogram is created, add to the rest.
         this.histList.add(newHist);
         
+        newHist.calculateAverage();
         newHist.print();
     }
     
-        public void ReadData() {
+    public void ReadData() {
         BufferedReader br = null;
 
         //Read data from file
@@ -109,10 +110,12 @@ public class Data {
                 } else {
                     //start of new histogram, first save previous, then continue
 
-                    //process previous
+                    //process previous histogram
                     if (!CurrentID.equals("")) {
                         addHistogram(CurrentID, ProbabilityList);
                     }
+                    
+                    
 
                     //Reset parameters
                     //ProbabilityList.clear();
@@ -223,6 +226,16 @@ public class Data {
         return min;
     }
     
+    public void sumSquaredPreCompute(){
+        for(int i=0; i<histList.size(); i++){
+            Histogram hist = (Histogram) histList.get(i);
+            for(int j=0; j<hist.size(); j++){
+                this.A.add(hist.getTuple(j).prob);
+                this.B.add(Math.pow(hist.getTuple(j).prob,2));
+            }
+        }
+    }
+    
     // compress all the data into buckets
     public void compressIntoNBuckets(int nrOfBuckets){
         System.out.println("Start creating buckets");
@@ -248,19 +261,10 @@ public class Data {
         }
         System.out.println("All buckets created");
         writeToFile();
-                
+           
     }
     
-    public void sumSquaredPreCompute(){
-        for(int i=0; i<histList.size(); i++){
-            Histogram hist = (Histogram) histList.get(i);
-            for(int j=0; j<hist.size(); j++){
-                this.A.add(hist.getTuple(j).prob);
-                this.B.add(Math.pow(hist.getTuple(j).prob,2));
-            }
-        }
-    }
-    
+
     
     //-----------------------------------------------------------------------//
     //Query buckets                                                          //
