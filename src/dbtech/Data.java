@@ -25,6 +25,9 @@ public class Data {
     private final List bucketList;
     private final List A;
     private final List B;
+    private long startPrecomputeTime;
+    private long startBucketTime;
+    private long endTime;
 
     public Data() {
         this.histList = new ArrayList();
@@ -115,8 +118,6 @@ public class Data {
                         addHistogram(CurrentID, ProbabilityList);
                     }
                     
-                    
-
                     //Reset parameters
                     //ProbabilityList.clear();
                     ProbabilityList = new ArrayList();
@@ -156,12 +157,38 @@ public class Data {
             File logFile = new File("C:\\Users\\Public\\Documents\\out.txt");
 
             writer = new BufferedWriter(new FileWriter(logFile));
-            for (int i = 0; i < this.bucketList.size(); i++){
-                String bucket = this.bucketList.get(i).toString();
-                writer.write(bucket);
+            /*
+            for (Object o : this.histList) {
+                Histogram hist = (Histogram) o;
+                Double d = hist.getSSE();
+                writer.write(d.toString());
                 writer.newLine();
             }
-
+            
+            writer.write(" ");
+            writer.newLine();
+            */
+            Double nrOfBuckets = (double) this.bucketList.size();
+            writer.write(nrOfBuckets.toString());
+            writer.newLine();
+            
+            Long diff = this.endTime - this.startPrecomputeTime;
+            writer.write(diff.toString());
+            writer.newLine();
+            
+            diff = this.endTime - this.startBucketTime;
+            writer.write(diff.toString());
+            writer.newLine();
+            
+            for (int i = 0; i < this.bucketList.size(); i++){
+                //String bucket = this.bucketList.get(i).toString();
+                Object o = this.bucketList.get(i);
+                List l = (List) o;
+                Double d = (Double) l.get(0);
+                writer.write(d.toString());
+                writer.newLine();
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -171,6 +198,8 @@ public class Data {
             } catch (IOException e) {
             }
         }
+        
+        
     }
     
     //-----------------------------------------------------------------------//
@@ -239,8 +268,12 @@ public class Data {
     // compress all the data into buckets
     public void compressIntoNBuckets(int nrOfBuckets){
         System.out.println("Start creating buckets");
+        this.startPrecomputeTime = System.currentTimeMillis( );
+        
         //precompute values
         sumSquaredPreCompute();
+        
+        this.startBucketTime = System.currentTimeMillis( );
         
         int bucketSize = (int)Math.ceil(histList.size()/nrOfBuckets);
         
@@ -255,13 +288,14 @@ public class Data {
             //Calculate optimal representative for this bucket
             bucket = hOpt(bucketSize, currentBucketNr, 5, bucket);
             bucketList.add(bucket);
-            System.out.println(currentBucketNr+" buckets created. "+bucket);
+            //System.out.println(currentBucketNr+" buckets created. "+bucket);
             
             
         }
-        System.out.println("All buckets created");
-        writeToFile();
-           
+        
+        this.endTime = System.currentTimeMillis( );
+        
+        System.out.println("All buckets created");           
     }
     
 
